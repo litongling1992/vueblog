@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-29 15:07:45
- * @LastEditTime: 2020-08-07 16:15:53
+ * @LastEditTime: 2020-08-12 11:36:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \blog-front\src\views\DataManager\TablesData.vue
@@ -30,7 +30,7 @@
         <el-table-column  label="操作" width="160">
           <template slot-scope="scope">
             <el-button @click="handleEdit(scope.$index,scope.row)" size="mini">编辑</el-button>
-            <el-button size="mini" type="danger">删除</el-button>
+            <el-button @click="handleDelete(scope.$index,scope.row)" size="mini" type="danger">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -38,7 +38,7 @@
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-sizes="[5,10,20]" :page-size="size" layout="total,sizes,prev,pager,next,jumper" :total="total">
         </el-pagination>
       </div>
-      <EditDialog :dialogVisible="dialogVisible" :form="formData"></EditDialog>
+      <EditDialog :dialogVisible="dialogVisible" @closeDialog="closeDialog" :form="formData"></EditDialog>
     </div>
 </template>
 
@@ -78,6 +78,25 @@ export default class TablesData extends Vue{
     // console.log(index,row);
     this.formData =row;
     this.dialogVisible =true;
+   }
+
+   handleDelete(index:number,row:any){
+     (this as any).$axios.delete(`/api/profiles/delete/${row._id}`)
+     .then((res:any) => {
+              this.$message({
+          message: res.data.msg,
+          type: "success"
+        });
+
+        this.tableData.splice(index, 1);
+     })
+     .catch((err:any) => {
+
+     })
+   }
+
+     closeDialog(){
+     this.dialogVisible = false;
    }
 
    loadData() {
@@ -123,6 +142,8 @@ export default class TablesData extends Vue{
        console.log(err);
      })
    }
+
+ 
 
 
 }
