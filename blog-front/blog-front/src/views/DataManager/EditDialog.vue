@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-08-03 18:18:45
- * @LastEditTime: 2020-08-12 11:29:37
+ * @LastEditTime: 2020-08-14 10:57:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \blog-front\src\views\DataManager\EditDialog.vue
@@ -37,7 +37,7 @@
       </el-form-item>
     </el-form>
     <span slot="footer" class="dilog-footer">
-        <el-button @click="$emit('closeDialog')" size="small">取消</el-button>
+        <el-button @click="$emit(`closeDialog`)" size="small">取消</el-button>
         <el-button @click="submitForm('ruleForm')" type="primary" size="small">确定</el-button>
     </span>
   </el-dialog>

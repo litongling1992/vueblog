@@ -2,7 +2,7 @@
    <el-container class="layout-content">
     <!-- 左侧菜单 -->
     <el-aside width="200px">
-      <slot name="left"></slot>
+      <slot class="side"  name="left"></slot>
     </el-aside>
 
     <!-- 右侧页面 -->
@@ -93,6 +93,9 @@ export default class Content extends Vue{
 .layout-content {
   width: 100%;
   height: 100%;
+  .el-side{
+    .side{background: #495060};
+  }
   .el-main {
     padding: 0;
     .top {
