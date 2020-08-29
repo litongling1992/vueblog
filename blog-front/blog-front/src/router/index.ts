@@ -59,7 +59,7 @@ export const asyncRouterMap = [
         meta: {
           title: '表单管理',
           icon: 'el-icon-s-order',
-          roles: ['admin', 'editor']
+          roles: ['admin', 'editor'] //增加权限
         },
         component: () => import('@/views/DataManager/FormsData.vue')
       }
@@ -75,7 +75,7 @@ export const asyncRouterMap = [
       {
         path: '/accountData',
         name: 'accountData',
-        meta: { title: '账户管理', icon: 'el-icon-coordinate' },
+        meta: { title: '账户管理', icon: 'el-icon-coordinate' , roles: ['admin'] },
         component: () => import('@/views/UserManager/AccountData.vue')
       }
     ]
@@ -162,8 +162,35 @@ router.beforeEach((to: any, from: any, next: any) => {
   if (to.path == '/login' || to.path == '/password') {
     next();
   } else {
-    isLogin ? next() : next('/login');
+    if(isLogin){
+      const decode:any = jwt_decode(localStorage.tsToken);
+      const {key} = decode;
+      if(hasPermission(key,to)){
+        next();
+      }else{
+        next('/404');
+      }
+
+    }else{
+      next('/login');
+    }
+    //isLogin ? next() : next('/login');
   }
 })
+
+/**
+ * 判断是否有权限
+ * @param roles 当前角色
+ * @param route 当前路由对象
+ * */
+function hasPermission(roles: string, route: any) {
+  if (route.meta && route.meta.roles) {
+    // 如果meta.roles是否包含角色的key值,如果包含那么就是有权限,否则无权限
+    return route.meta.roles.some((role: string) => role.indexOf(roles) >= 0);
+  } else {
+    // 默认不设置有权限
+    return true;
+  }
+}
 
 export default router

@@ -88,7 +88,7 @@ export default class Login extends Vue {
       if (validate) {
         console.log("校验通过");
         this.isLoding = true;
-        console.log("this.loginForm"+" username="+this.loginForm.username+";pwd="+this.loginForm.pwd);
+        //console.log("this.loginForm"+" username="+this.loginForm.username+";pwd="+this.loginForm.pwd);
         (this as any).$axios.post("/api/users/login", this.loginForm)
           .then((res: any) => {
             this.isLoding = false;

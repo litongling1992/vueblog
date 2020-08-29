@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-29 15:07:45
- * @LastEditTime: 2020-08-12 11:36:17
+ * @LastEditTime: 2020-08-29 16:11:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \blog-front\src\views\DataManager\TablesData.vue
@@ -27,7 +27,7 @@
         </el-table-column>
         <el-table-column prop="date" label="上线日期" width="160">
         </el-table-column>
-        <el-table-column  label="操作" width="160">
+        <el-table-column v-if="getUser.key != 'visitor'" label="操作" width="160">
           <template slot-scope="scope">
             <el-button @click="handleEdit(scope.$index,scope.row)" size="mini">编辑</el-button>
             <el-button @click="handleDelete(scope.$index,scope.row)" size="mini" type="danger">删除</el-button>
@@ -45,12 +45,16 @@
 <script lang="ts">
 import { Component, Vue , Provide} from 'vue-property-decorator';
 import EditDialog from './EditDialog.vue';
+import { Getter, Action , State , Mutation } from 'vuex-class';
 @Component({
   components:{
     EditDialog
   }
 })
 export default class TablesData extends Vue{
+
+  @Getter("user") getUser:any;
+
    @Provide() isSearch:Boolean =false;
    @Provide() searVal:string='';
    @Provide() tHeight:number=document.body.offsetHeight - 220;
