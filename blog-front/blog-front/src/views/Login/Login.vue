@@ -18,7 +18,7 @@
         <el-form-item prop="pwd">
           <el-input
             type="password"
-            v-model="loginForm.pwd"
+            v-model="loginForm.password"
             auto-complete="off"
             placeholder="密码"
           ></el-input>
@@ -32,12 +32,12 @@
             @click.native.prevent="handleSubmit"
           >登录</el-button>
         </el-form-item>
-        <!-- 七天自动登录和忘记密码 -->
+        <!-- 七天自动登录和忘记密码  v-model="loginForm.autoLogin"
+            :checked="loginForm.autoLogin" -->
         <el-form-item>
           <el-checkbox
             style="float:left;"
-            v-model="loginForm.autoLogin"
-            :checked="loginForm.autoLogin"
+            
           >七天自动登录</el-checkbox>
           <el-button type="text" class="forget" @click="$router.push('/password')">忘记密码?</el-button>
         </el-form-item>
@@ -50,6 +50,7 @@
 import { Component, Vue, Provide } from "vue-property-decorator";
 import { Getter, Action , State , Mutation } from 'vuex-class';
 import LoginHeader from "@/views/Login/LoginHeader.vue";
+import jwt from 'jwt-decode'
 
 @Component({
   components: {
@@ -64,18 +65,24 @@ export default class Login extends Vue {
 
   @Provide() loginForm: {
     username: String;
-    pwd: String;
-    autoLogin: boolean;
+    password: String;
+    //autoLogin: boolean;
   } = {
     username: "",
-    pwd: "",
-    autoLogin: true,
+    password: "",
+    //autoLogin: true,
   };
 
   @Provide() rules = {
     userName: [{ required: true, message: "请输入账号", trigger: "blur" }],
     password: [{ required: true, message: "请输入密码", trigger: "blur" }],
   };
+
+  @Provide() userInfo = {
+    username:"",
+    realname:"",
+    token:""
+  }
 
   /**登录提交事件
    * @description: 
@@ -88,18 +95,41 @@ export default class Login extends Vue {
       if (validate) {
         console.log("校验通过");
         this.isLoding = true;
+             const user:any ={
+             username: this.loginForm.username,
+            password: this.loginForm.password,
+          };
         //console.log("this.loginForm"+" username="+this.loginForm.username+";pwd="+this.loginForm.pwd);
-        (this as any).$axios.post("/api/users/login", this.loginForm)
+      
+      
+        //(this as any).$axios.post("/api/users/login", this.loginForm)
+        (this as any).$axios.post("http://localhost:8989/api/user/login", user)
           .then((res: any) => {
             this.isLoding = false;
-             console.log(res.data);
-            // 存储token
-            localStorage.setItem("tsToken", res.data.token);
-            // 存储到vuex中
-            this.setUser(res.data.token);
+            if(res.data.state){
+                console.log("data为："+res.data.msg);
+                const tsToken ='Bearer ' + res.data.token;
 
-            // 登录成功 跳转 /
-            this.$router.push("/");
+                const userInfo:any ={
+                  username:res.data.user.username,
+                  realname:res.data.user.realname,
+                  token:tsToken
+                };
+                // 存储token
+                localStorage.setItem("tsToken", tsToken);
+                // console.log("token:----"+res.data.token);
+                const decoded =  jwt('Bearer ' + res.data.token);
+                console.log(decoded);
+                // 存储到vuex中
+                this.setUser(tsToken);       
+                //登录成功 跳转 /
+                this.$router.push("/");
+            }
+            else{
+                this.$message.error(res.data.msg);
+               //返回登录页面
+            this.$router.push("/login");
+            }         
           })
           .catch((err:string) => {
             console.log("失败"+err);

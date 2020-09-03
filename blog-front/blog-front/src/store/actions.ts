@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-29 10:28:08
- * @LastEditTime: 2020-08-29 15:59:49
+ * @LastEditTime: 2020-09-03 19:09:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \blog-front\src\store\actions.ts
@@ -12,13 +12,15 @@ import { asyncRouterMap } from '../router'
 
 const actions: ActionTree<any,any> ={
    async setUser({state,commit},user:any){
+        console.log("Set-user"+user);
         const decoded:any = jwt_decode(user);
         commit('SET_USER',decoded);
+        console.log("用户角色decoded;" + decoded.roles);
         //key里边包含了用户角色 如 admin  visitor editor
-        const { key } =decoded;
+        const  key  =decoded.roles;
 
         let accessedRouters =asyncFilterRouresMap(asyncRouterMap,key);
-        //console.log(accessedRouters);
+        console.log("Action解析完成用户角色为："+key);
         commit('SET_ROUTERS', accessedRouters);
    }
 }

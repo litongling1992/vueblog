@@ -10,8 +10,8 @@
       <el-col :xs="14" :sm="12" :md="10" :lg="8" :xl="6">
         <el-dropdown @command="userCommand" class="system-user">
           <span class="userinfo-inner">
-            <img :src="require('@/assets/' + getUser.key + '.jpg')" alt />
-            {{getUser.username}}
+            <img :src="require('@/assets/' + getUser.roles + '.jpg')" alt />
+            {{getUser.realname}}
             <!-- <i class="el-icon-user-solid"></i> -->
           </span>
           <el-dropdown-menu slot="dropdown">
@@ -53,9 +53,9 @@ export default class LayoutHeader extends Vue {
       this.$router.push("/user");
     }
   }
-  // created() {
-  //    console.log(this.getUser);
-  // }
+  created() {
+     console.log("获取用户信息"+this.getUser);
+  }
 }
 </script>
 
