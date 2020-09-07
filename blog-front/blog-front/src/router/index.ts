@@ -59,7 +59,7 @@ export const asyncRouterMap = [
         meta: {
           title: '表单管理',
           icon: 'el-icon-s-order',
-          roles: ['admin', 'editor'] //增加权限
+          roles: ['admin'] //增加权限
         },
         component: () => import('@/views/DataManager/FormsData.vue')
       }
@@ -165,7 +165,7 @@ router.beforeEach((to: any, from: any, next: any) => {
     if(isLogin){
       const decode:any = jwt_decode(localStorage.tsToken);
       const {key} = decode;
-      if(hasPermission(key,to)){
+      if(hasPermission(decode.roles,to)){
         next();
       }else{
         next('/404');

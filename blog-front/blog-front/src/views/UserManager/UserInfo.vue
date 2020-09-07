@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-29 15:11:30
- * @LastEditTime: 2020-07-31 15:53:59
+ * @LastEditTime: 2020-09-07 17:53:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \blog-front\src\views\UserManager\UserInfo.vue
@@ -10,7 +10,7 @@
     <div class="user-info">
        <div class="img-box">
            <h2 class="title">About Me</h2>
-           <img :src="require('@/assets/'+getUser.key+'.jpg')">
+           <img :src="require('@/assets/'+ getUser.roles+'.jpg')">
            <h4>{{ getUser.username}}</h4>
        </div>
        <div class="info-box">

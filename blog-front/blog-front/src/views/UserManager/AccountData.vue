@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-29 15:10:53
- * @LastEditTime: 2020-08-14 17:49:51
+ * @LastEditTime: 2020-09-07 19:24:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \blog-front\src\views\UserManager\AccountData.vue
@@ -74,11 +74,6 @@ export default class AccountData extends Vue {
       des: "Super Administrator. Have access to view all pages.",
     },
     {
-      key: "editor",
-      role: "客服",
-      des: "Normal Editor. Can see all pages except permission page",
-    },
-    {
       key: "visitor",
       role: "游客",
       des: "Just a visitor. Can only see the home page and the document page",
@@ -90,18 +85,19 @@ export default class AccountData extends Vue {
   }
 
   getUserData() {
-    (this as any)
-      .$axios(`/api/users/allUsers`)
+    (this as any).$axios.get("http://localhost:8989/api/user/findAll")
       .then((res: any) => {
-        //console.log(res.data);
+        console.log("获取数据" + res.data.msg);
         //遍历数据给每个属性增加一个属性edit为false
-        res.data.datas.forEach((item: any) => {
+          res.data.users.forEach((item: any) => {
           item.edit = false;
         });
 
-        this.tableData = res.data.datas;
+        this.tableData = res.data.users;
       })
-      .catch((err: any) => {});
+      .catch((err: any) => {
+         console.log("获取所有用户数据失败"+err);
+      });
   }
   addAccount() {
     this.dialogVisible = true;
@@ -120,7 +116,7 @@ export default class AccountData extends Vue {
     // 完成
     row.edit = false;
     (this as any).$axios
-      .post(`/api/users/editUser/${row._id}`, row)
+      .post(`/api/users/editUser/${row.id}`, row)
       .then((res: any) => {
         this.$message({
           message: res.data.msg,
